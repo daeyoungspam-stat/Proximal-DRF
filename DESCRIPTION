@@ -1,0 +1,16 @@
+Package: pdrReproduce
+Type: Package
+Title: Reproduction of Proximal Dose-Response Simulation Experiments
+Version: 0.1.0
+Author: Reproducibility project
+Maintainer: Repository maintenance <package@example.org>
+Description: Executes frozen simulation engines for dose-response and
+    derivative inference and fold-averaged parametric-null tests. Provides
+    deterministic task plans, original-seed recovery mappings, checkpointed
+    execution, result validation, and streaming summaries.
+License: file LICENSE
+Encoding: UTF-8
+Depends: R (>= 4.2.0)
+Imports: parallel, tools, utils, stats, Rcpp, Matrix, rlang
+Suggests: ggplot2
+SystemRequirements: C++17; BLAS and Fortran runtime matching R

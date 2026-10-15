@@ -1,0 +1,20 @@
+args <- commandArgs(trailingOnly = TRUE)
+root <- Sys.getenv("PDR_JOINT_ROOT", unset = "")
+if (!nzchar(root)) {
+  file_arg <- commandArgs(FALSE)[startsWith(commandArgs(FALSE), "--file=")][[1L]]
+  root <- dirname(dirname(sub("^--file=", "", file_arg)))
+}
+root <- normalizePath(root, mustWork = TRUE)
+source(file.path(root, "R", "utils.R"), local = .GlobalEnv)
+source_simulation_files(root, compile_cpp = TRUE)
+cli <- parse_cli(args)
+profile <- cli_value(cli, "profile", "production", "character")
+cfg <- simulation_config(profile)
+n <- cli_value(cli, "n", NULL, "integer")
+rep <- cli_value(cli, "rep", NULL, "integer")
+outdir <- cli_value(cli, "outdir", file.path(root, "results"), "character")
+force <- cli_value(cli, "force", FALSE, "logical")
+assert_true(!is.null(n) && !is.null(rep), "--n and --rep are required")
+status <- execute_replication(n, rep, cfg, root, outdir, force, worker = "single")
+print(status, row.names = FALSE)
+if (!status$status %in% c("completed", "skipped_valid")) quit(status = 1L)
